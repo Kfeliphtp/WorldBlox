@@ -302,7 +302,7 @@ texto2.Parent = botao2
 texto2.Size = UDim2.new(1,-60,1,0)
 texto2.Position = UDim2.new(0,20,0,0)
 texto2.BackgroundTransparency = 1
-texto2.Text = "Auto Farm"
+texto2.Text = "Auto Buy i"
 texto2.TextColor3 = Color3.new(1,1,1)
 texto2.TextSize = 22
 texto2.Font = Enum.Font.SourceSansBold
@@ -965,65 +965,98 @@ local function criarESP(obj, texto, cor)
 end
 
 -------------------------------------------------
--- ESP PLAYERS
+-- ESP PLAYERS (inclui você)
 -------------------------------------------------
 
 function ESPPlayers()
 
-	-- Loop infinito enquanto a opção estiver selecionada
 	while selecionados["Players"] do
+
 		for _,p in pairs(game.Players:GetPlayers()) do
-			if p ~= game.Players.LocalPlayer then
-				local char = p.Character
-				if char then
-					local part = char:FindFirstChild("HumanoidRootPart") or char:FindFirstChild("Head")
-					if part then
-						-- Cria ESP se não existir
-						if not part:FindFirstChild("ESPLabel") then
-							criarESP(
-								part,
-								p.Name,
-								Color3.fromRGB(255,255,0)
-							)
-						end
-					end
+
+			local char = p.Character
+
+			if char and not char:FindFirstChild("PlayerESP") then
+
+				-- Highlight
+				local highlight = Instance.new("Highlight")
+				highlight.Name = "PlayerESP"
+				highlight.Parent = char
+				highlight.FillTransparency = 1
+				highlight.OutlineColor = Color3.fromRGB(255,255,0)
+				highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+
+				-- Nome acima da cabeça
+				local head = char:FindFirstChild("Head")
+
+				if head then
+
+					local billboard = Instance.new("BillboardGui")
+					billboard.Name = "PlayerESP"
+					billboard.Parent = head
+					billboard.Size = UDim2.new(0,120,0,30)
+					billboard.StudsOffset = Vector3.new(0,2,0)
+					billboard.AlwaysOnTop = true
+
+					local text = Instance.new("TextLabel")
+					text.Parent = billboard
+					text.Size = UDim2.new(1,0,1,0)
+					text.BackgroundTransparency = 1
+					text.Text = p.Name
+					text.TextColor3 = Color3.fromRGB(255,255,0)
+					text.TextScaled = true
+					text.TextStrokeTransparency = 0
+
 				end
-			end
-		end
-		task.wait(1) -- Atualiza a cada 1 segundo
-	end
-
-end
-
--------------------------------------------------
--- ESP BRAINROT
--------------------------------------------------
-
-function ESPBrainrot()
-
-	while selecionados["Brainrot"] do
-
-		if workspace:FindFirstChild("Brainrots") then
-
-			for _,v in pairs(workspace.Brainrots:GetChildren()) do
-
-				local raridade = "?"
-
-				if v:FindFirstChild("BrainrotRarity") then
-					raridade = v.BrainrotRarity.Value
-				end
-
-				criarESP(
-					v,
-					v.Name.." ["..raridade.."]",
-					Color3.fromRGB(255,0,255)
-				)
 
 			end
 
 		end
 
 		task.wait(1)
+
+	end
+
+end
+
+-------------------------------------------------
+-- ESP BRAINROT (detecta no mapa inteiro)
+-------------------------------------------------
+
+function ESPBrainrot()
+
+	while selecionados["Brainrot"] do
+
+		for _,v in pairs(workspace:GetDescendants()) do
+
+			if string.find(string.lower(v.Name), "brainrot") then
+
+				local part
+
+				if v:IsA("Model") then
+					part = v:FindFirstChild("HumanoidRootPart") 
+						or v.PrimaryPart 
+						or v:FindFirstChildWhichIsA("BasePart")
+				elseif v:IsA("BasePart") then
+					part = v
+				end
+
+				if part and not part:FindFirstChild("ESPLabel") then
+
+					criarESP(
+						part,
+						v.Name,
+						Color3.fromRGB(255,0,255)
+					)
+
+				end
+
+			end
+
+		end
+
+		task.wait(2)
+
 	end
 
 end
