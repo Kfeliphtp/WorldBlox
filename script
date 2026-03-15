@@ -432,12 +432,19 @@ end
 -- PEGAR BRAINROT
 --------------------------------------------------
 
-local function pegarBrainrot()
+local function comprarBrainrot()
 
-	for _,v in pairs(workspace:GetDescendants()) do
-		if v:IsA("BasePart") and v.Name == "Brainrot" then
-			firetouchinterest(hrp, v, 0)
-			firetouchinterest(hrp, v, 1)
+	local brainrots = player.PlayerGui:FindFirstChild("Brainrots", true)
+
+	if brainrots then
+		for _,v in pairs(brainrots:GetDescendants()) do
+			if v:IsA("TextButton") or v:IsA("ImageButton") then
+
+				pcall(function()
+					v:Activate()
+				end)
+
+			end
 		end
 	end
 
@@ -512,14 +519,14 @@ end)
 
 task.spawn(function()
 
-	while task.wait(0.5) do
+	while task.wait(1) do
 
 		if ativo4 then
 
 			pcall(function()
 
 				coletar()
-				pegarBrainrot()
+				comprarBrainrot()
 				rebirth()
 
 			end)
