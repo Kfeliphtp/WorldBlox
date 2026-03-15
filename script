@@ -313,55 +313,6 @@ end)
 
 ------------------------------------------------
 
---                 BUTTON2
-
-local botao2 = Instance.new("ImageButton")
-botao2.Parent = scroll
-botao2.Size = UDim2.new(0,250,0,50)
-botao2.Position = UDim2.new(0,300,0,0)
-botao2.BackgroundTransparency = 1
-botao2.Image = "rbxassetid://108930673431145"
-
-local texto2 = Instance.new("TextLabel")
-texto2.Parent = botao2
-texto2.Size = UDim2.new(1,-60,1,0)
-texto2.Position = UDim2.new(0,20,0,0)
-texto2.BackgroundTransparency = 1
-texto2.Text = "Auto Farm"
-texto2.TextColor3 = Color3.new(1,1,1)
-texto2.TextSize = 22
-texto2.Font = Enum.Font.SourceSansBold
-texto2.TextXAlignment = Enum.TextXAlignment.Left
-
-local check2 = Instance.new("TextLabel")
-check2.Parent = botao2
-check2.Size = UDim2.new(0,40,0,40)
-check2.Position = UDim2.new(1,-55,0.5,-20)
-check2.BackgroundTransparency = 1
-check2.Text = "☐"
-check2.TextScaled = true
-check2.TextColor3 = Color3.fromRGB(0, 115, 223)
-
-local ativo2 = false
-
-botao2.MouseButton1Click:Connect(function()
-
-	ativo2 = not ativo2
-
-	if ativo2 then
-		check2.Text = "▣"
-		check2.TextColor3 = Color3.fromRGB(0, 115, 223)
-	else
-		check2.Text = "☐"
-		check2.TextColor3 = Color3.fromRGB(0, 115, 223)
-	end
-
-end)
-
-------------------------------------------------
-
---                 BUTTON3
-
 local botao3 = Instance.new("ImageButton")
 botao3.Parent = scroll
 botao3.Size = UDim2.new(0,250,0,50)
@@ -467,10 +418,79 @@ end)
 
 ------------------------------------------------
 
+-- PLAYER
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
+
+--------------------------------------------------
+-- AUTO COLECT COINS
+--------------------------------------------------
+
+local ativo1 = true
+
+local function coletar()
+
+	for _,v in pairs(workspace:GetDescendants()) do
+		if v:IsA("BasePart") and v.Name == "Collect" then
+
+			firetouchinterest(hrp, v, 0)
+			firetouchinterest(hrp, v, 1)
+
+		end
+	end
+
+end
+
+task.spawn(function()
+	while task.wait(0.5) do
+		if ativo1 then
+			pcall(function()
+				coletar()
+			end)
+		end
+	end
+end)
+
+--------------------------------------------------
+-- PEGAR BRAINROT
+--------------------------------------------------
+
+local function pegarBrainrot()
+
+	for _,v in pairs(workspace:GetDescendants()) do
+		if v:IsA("BasePart") and v.Name == "Brainrot" then
+
+			firetouchinterest(hrp, v, 0)
+			firetouchinterest(hrp, v, 1)
+
+		end
+	end
+
+end
+
+--------------------------------------------------
+-- REBIRTH
+--------------------------------------------------
+
+local function rebirth()
+
+	local rebirthRemote = game:GetService("ReplicatedStorage"):FindFirstChild("Rebirth")
+
+	if rebirthRemote then
+		rebirthRemote:FireServer()
+	end
+
+end
+
+--------------------------------------------------
+-- BOTÃO AUTO REBIRTH
+--------------------------------------------------
+
 local botao4 = Instance.new("ImageButton")
 botao4.Parent = scroll
 botao4.Size = UDim2.new(0,250,0,50)
-botao4.Position = UDim2.new(0,300,0,70)
+botao4.Position = UDim2.new(0,300,0,0)
 botao4.BackgroundTransparency = 1
 botao4.Image = "rbxassetid://108930673431145"
 
@@ -492,7 +512,7 @@ check4.Position = UDim2.new(1,-55,0.5,-20)
 check4.BackgroundTransparency = 1
 check4.Text = "☐"
 check4.TextScaled = true
-check4.TextColor3 = Color3.fromRGB(0, 115, 223)
+check4.TextColor3 = Color3.fromRGB(0,115,223)
 
 local ativo4 = false
 
@@ -502,10 +522,34 @@ botao4.MouseButton1Click:Connect(function()
 
 	if ativo4 then
 		check4.Text = "▣"
-		check4.TextColor3 = Color3.fromRGB(0, 115, 223)
 	else
 		check4.Text = "☐"
-		check4.TextColor3 = Color3.fromRGB(0, 115, 223)
+	end
+
+end)
+
+--------------------------------------------------
+-- LOOP AUTO REBIRTH
+--------------------------------------------------
+
+task.spawn(function()
+
+	while task.wait(1) do
+
+		if ativo4 then
+
+			pcall(function()
+
+				-- pega brainrot
+				pegarBrainrot()
+
+				-- tenta rebirth
+				rebirth()
+
+			end)
+
+		end
+
 	end
 
 end)
@@ -516,7 +560,7 @@ end)
 local botao5 = Instance.new("ImageButton")
 botao5.Parent = scroll
 botao5.Size = UDim2.new(0,250,0,50)
-botao5.Position = UDim2.new(0,300,0,210)
+botao5.Position = UDim2.new(0,300,0,70)
 botao5.BackgroundTransparency = 1
 botao5.Image = "rbxassetid://108930673431145"
 
@@ -656,7 +700,7 @@ speedFrame.BackgroundTransparency = 1
 local speedImage = Instance.new("ImageLabel")
 speedImage.Parent = speedFrame
 speedImage.Size = UDim2.new(0,250,0,50)
-speedImage.Position = UDim2.new(0,0,0,210)
+speedImage.Position = UDim2.new(0,200,0,140)
 speedImage.BackgroundTransparency = 1
 speedImage.Image = "rbxassetid://108930673431145"
 
@@ -669,7 +713,7 @@ speedText.Parent = speedFrame
 speedText.Size = UDim2.new(0,200,0,30)
 speedText.Position = UDim2.new(0,20,0,220)
 speedText.BackgroundTransparency = 1
-speedText.Text = "Speed"
+speedText.Text = "Walk Speed"
 speedText.TextColor3 = Color3.new(1,1,1)
 speedText.TextSize = 20
 speedText.Font = Enum.Font.SourceSansBold
@@ -779,312 +823,6 @@ speedButton.MouseButton1Click:Connect(function()
 end)
 
 
--------------------------------------------------
--- TABELA DE SELECIONADOS
--------------------------------------------------
-
-local selecionados = {}
-
--------------------------------------------------
--- FRAME DO ESP
--------------------------------------------------
-
-local espFrame = Instance.new("Frame")
-espFrame.Parent = scroll
-espFrame.Size = UDim2.new(1,-20,0,80)
-espFrame.BackgroundTransparency = 1
-
--------------------------------------------------
--- IMAGEM
--------------------------------------------------
-
-local espImage = Instance.new("ImageLabel")
-espImage.Parent = espFrame
-espImage.Size = UDim2.new(0,250,0,50)
-espImage.Position = UDim2.new(0,300,0,140)
-espImage.BackgroundTransparency = 1
-espImage.Image = "rbxassetid://108930673431145"
-
--------------------------------------------------
--- TEXTO
--------------------------------------------------
-
-local espText = Instance.new("TextLabel")
-espText.Parent = espFrame
-espText.Size = UDim2.new(0,200,0,30)
-espText.Position = UDim2.new(0,320,0,150)
-espText.BackgroundTransparency = 1
-espText.Text = "ESP Type"
-espText.TextColor3 = Color3.new(1,1,1)
-espText.TextSize = 20
-espText.Font = Enum.Font.SourceSansBold
-espText.TextXAlignment = Enum.TextXAlignment.Left
-
--------------------------------------------------
--- BOTÃO DROPDOWN
--------------------------------------------------
-
-local dropdownButton = Instance.new("ImageButton")
-dropdownButton.Parent = espFrame
-dropdownButton.Size = UDim2.new(0,90,0,25)
-dropdownButton.Position = UDim2.new(1,-100,0,150)
-dropdownButton.Image = "rbxassetid://89730535431644"
-dropdownButton.BackgroundTransparency = 1
-
--- TEXTO DO BOTÃO
-local dropdownText = Instance.new("TextLabel")
-dropdownText.Parent = dropdownButton
-dropdownText.Size = UDim2.new(1,0,1,0)
-dropdownText.BackgroundTransparency = 1
-dropdownText.Text = "Select"
-dropdownText.TextColor3 = Color3.new(1,1,1)
-dropdownText.TextSize = 12
-dropdownText.Font = Enum.Font.SourceSansBold
-
--------------------------------------------------
--- MENU
--------------------------------------------------
-
-local dropdownMenu = Instance.new("Frame")
-dropdownMenu.Parent = espFrame
-dropdownMenu.Size = UDim2.new(0,150,0,90)
-dropdownMenu.Position = UDim2.new(1,-220,0,150)
-dropdownMenu.BackgroundTransparency = 1
-dropdownMenu.Visible = false
-
--- IMAGEM FUNDO
-local menuImg = Instance.new("ImageLabel")
-menuImg.Parent = dropdownMenu
-menuImg.Size = UDim2.new(1,0,1,0)
-menuImg.Position = UDim2.new(0,0,0,0)
-menuImg.BackgroundTransparency = 1
-menuImg.Image = "rbxassetid://97706376434954"
-
--- BORDAS
-local corner2 = Instance.new("UICorner")
-corner2.Parent = menuImg
-corner2.CornerRadius = UDim.new(0,5)
-
--------------------------------------------------
--- OPÇÕES
--------------------------------------------------
-
-local options = {
-	"Players",
-	"Brainrot",
-	"Lucky Block"
-}
-
-for i,v in ipairs(options) do
-
-	local option = Instance.new("TextButton")
-	option.Parent = dropdownMenu
-	option.Size = UDim2.new(1,0,0,30)
-	option.Position = UDim2.new(0,5,0,(i-1)*30)
-	option.BackgroundTransparency = 1
-
-	option.Text = "   "..v.."  ☐"
-	option.TextColor3 = Color3.new(1,1,1)
-	option.TextSize = 12
-	option.TextXAlignment = Enum.TextXAlignment.Left
-
-	local ativo = false
-
-	option.MouseButton1Click:Connect(function()
-
-		ativo = not ativo
-
-		if ativo then
-			option.Text = "   "..v.."  ▣"
-			selecionados[v] = true
-		else
-			option.Text = "   "..v.."  ☐"
-			selecionados[v] = nil
-		end
-
-		local count = 0
-		for _ in pairs(selecionados) do
-			count += 1
-		end
-
-		if count == 0 then
-			dropdownText.Text = "Select"
-		else
-			dropdownText.Text = count.." Selected"
-		end
-
-		if selecionados["Players"] then
-			ESPPlayers()
-		end
-
-		if selecionados["Brainrot"] then
-			ESPBrainrot()
-		end
-
-		if selecionados["Lucky Block"] then
-			ESPLucky()
-		end
-
-	end)
-
-end
-
-local player = game.Players.LocalPlayer
-
-local function distancia(obj)
-	if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
-		return 0
-	end
-
-	local root = player.Character.HumanoidRootPart
-
-	if obj:IsA("BasePart") then
-		return math.floor((root.Position - obj.Position).Magnitude)
-	elseif obj:IsA("Model") and obj:FindFirstChild("HumanoidRootPart") then
-		return math.floor((root.Position - obj.HumanoidRootPart.Position).Magnitude)
-	end
-
-	return 0
-end
-
--------------------------------------------------
--- FUNÇÃO ESP
--------------------------------------------------
-
-local function criarESP(obj, texto, cor)
-
-	if not obj then return end
-	if obj:FindFirstChild("ESPLabel") then return end
-
-	local billboard = Instance.new("BillboardGui")
-	billboard.Name = "ESPLabel"
-	billboard.Parent = obj
-	billboard.Size = UDim2.new(0,140,0,40)
-	billboard.StudsOffset = Vector3.new(0,3,0)
-	billboard.AlwaysOnTop = true
-
-	local label = Instance.new("TextLabel")
-	label.Parent = billboard
-	label.Size = UDim2.new(1,0,1,0)
-	label.BackgroundTransparency = 1
-	label.Text = texto
-	label.TextColor3 = cor
-	label.TextStrokeTransparency = 0
-	label.TextScaled = true
-
-	local highlight = Instance.new("Highlight")
-	highlight.Parent = obj
-	highlight.FillTransparency = 1
-	highlight.OutlineColor = cor
-	highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-
-	-- ATUALIZA DISTÂNCIA
-	task.spawn(function()
-		while billboard.Parent do
-			task.wait(0.5)
-			local dist = distancia(obj)
-			label.Text = texto.." ["..dist.."m]"
-		end
-	end)
-
-end
-
--------------------------------------------------
--- ESP PLAYERS
--------------------------------------------------
-
-function ESPPlayers()
-
-	while selecionados["Players"] do
-
-		for _,p in pairs(game.Players:GetPlayers()) do
-
-			if p ~= player then
-
-				if p.Character and p.Character:FindFirstChild("Head") then
-
-					criarESP(
-						p.Character.Head,
-						p.Name,
-						Color3.fromRGB(255,255,0)
-					)
-
-				end
-
-			end
-
-		end
-
-		task.wait(1)
-	end
-
-end
-
--------------------------------------------------
--- ESP BRAINROT
--------------------------------------------------
-
-function ESPBrainrot()
-
-	while selecionados["Brainrot"] do
-
-		if workspace:FindFirstChild("Brainrots") then
-
-			for _,v in pairs(workspace.Brainrots:GetChildren()) do
-
-				local raridade = "?"
-
-				if v:FindFirstChild("BrainrotRarity") then
-					raridade = v.BrainrotRarity.Value
-				end
-
-				criarESP(
-					v,
-					v.Name.." ["..raridade.."]",
-					Color3.fromRGB(255,0,255)
-				)
-
-			end
-
-		end
-
-		task.wait(1)
-	end
-
-end
-
--------------------------------------------------
--- ESP LUCKY BLOCK
--------------------------------------------------
-
-function ESPLucky()
-
-	while selecionados["Lucky Block"] do
-
-		for _,v in pairs(workspace:GetDescendants()) do
-
-			if v.Name == "LuckyBlock" then
-
-				criarESP(
-					v,
-					"Lucky Block",
-					Color3.fromRGB(0,255,0)
-				)
-
-			end
-
-		end
-
-		task.wait(2)
-	end
-
-end
--------------------------------------------------
--- ABRIR / FECHAR MENU
--------------------------------------------------
-dropdownButton.MouseButton1Click:Connect(function()
-	dropdownMenu.Visible = not dropdownMenu.Visible
-end)
 -------------------------------------------------
 -- FRAME DO BRAINROT
 -------------------------------------------------
