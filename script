@@ -1,58 +1,22 @@
 -- Player
 local player = game.Players.LocalPlayer
 local PlayerGui = player:WaitForChild("PlayerGui")
+
 -- Services
 local UIS = game:GetService("UserInputService")
 local VirtualUser = game:GetService("VirtualUser")
 local antiAFKConnection
+
 -- GUI
 local gui = Instance.new("ScreenGui")
 gui.Name = "BrainrotUI"
 gui.Parent = PlayerGui
 
-local UIS = game:GetService("UserInputService")
-
-local function tornarMovel(frame)
-	local dragging
-	local dragInput
-	local dragStart
-	local startPos
-	local function update(input)
-		local delta = input.Position - dragStart
-		frame.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
-	end
-	frame.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 then
-			dragging = true
-			dragStart = input.Position
-			startPos = frame.Position
-			input.Changed:Connect(function()
-				if input.UserInputState == Enum.UserInputState.End then
-					dragging = false
-				end
-			end)
-		end
-	end)
-	frame.InputChanged:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseMovement then
-			dragInput = input
-		end
-	end)
-	UIS.InputChanged:Connect(function(input)
-		if input == dragInput and dragging then
-			update(input)
-		end
-	end)
-end
-
 local function criarBotoesJanela(panel, mainPanel, newPanel)
+
 	local minimizado = false
 	local tamanhoNormal = panel.Size
+	
 	local homeBtn = Instance.new("TextButton")
 	homeBtn.Parent = panel
 	homeBtn.Size = UDim2.new(0,80,0,30)
@@ -63,22 +27,31 @@ local function criarBotoesJanela(panel, mainPanel, newPanel)
 	homeBtn.TextScaled = false
 	local corTextoNormal = Color3.fromRGB(9, 18, 202)
 	local corTextoHover = Color3.fromRGB(109, 5, 213)
+
 	homeBtn.TextColor3 = corTextoNormal
+	
 	-- HOVER TEXTO
 	homeBtn.MouseEnter:Connect(function()
 		homeBtn.TextColor3 = corTextoHover
 	end)
+
 	homeBtn.MouseLeave:Connect(function()
 		homeBtn.TextColor3 = corTextoNormal
 	end)
+	
 	homeBtn.MouseButton1Click:Connect(function()
+
 		mainPanel.Visible = true
 
 		if panel ~= mainPanel then
 			panel.Visible = false
 		end
+
 	end)
+	
+	-------------------------
 	-- BOTÃO MINIMIZAR
+	-------------------------
 	local minBtn = Instance.new("TextButton")
 	minBtn.Parent = panel
 	minBtn.Size = UDim2.new(0,25,0,25)
@@ -87,7 +60,10 @@ local function criarBotoesJanela(panel, mainPanel, newPanel)
 	minBtn.Text = "–"
 	minBtn.TextScaled = true
 	minBtn.TextColor3 = Color3.new(1,1,1)
+
+	-------------------------
 	-- BOTÃO FECHAR
+	-------------------------
 	local closeBtn = Instance.new("TextButton")
 	closeBtn.Parent = panel
 	closeBtn.Size = UDim2.new(0,25,0,25)
@@ -96,112 +72,182 @@ local function criarBotoesJanela(panel, mainPanel, newPanel)
 	closeBtn.Text = "x"
 	closeBtn.TextScaled = true
 	closeBtn.TextColor3 = Color3.new(1,1,1)
+
+	-------------------------
 	-- MINIMIZAR
+	-------------------------
 	minBtn.MouseButton1Click:Connect(function()
+
 		minimizado = not minimizado
 
 		if minimizado then
+
 			panel.Size = UDim2.new(
 				tamanhoNormal.X.Scale,
 				tamanhoNormal.X.Offset,
 				0,
 				30
 			)
-			panel.ImageTransparency = 1
-			panel.BackgroundColor3 = Color3.fromRGB(0,0,0)
+
+			panel.ImageTransparency = 1 -- some a imagem
+			panel.BackgroundColor3 = Color3.fromRGB(0,0,0) -- fundo preto
 			panel.BackgroundTransparency = 0
+
 		else
+
 			panel.Size = tamanhoNormal
-			panel.ImageTransparency = 0
+			panel.ImageTransparency = 0 -- volta a imagem
+
 		end
+
 		for _,obj in pairs(panel:GetChildren()) do
 			if obj ~= minBtn and obj ~= closeBtn then
 				obj.Visible = not minimizado
 			end
 		end
+
 	end)
+
+	-------------------------
 	-- FECHAR
+	-------------------------
 	closeBtn.MouseButton1Click:Connect(function()
 		panel.Visible = false
 	end)
+
 end
 
-
-
+-------------------------------------------------
 
 
 -------------------------------------------------
+
+-------------------------------------------------
 -- BOTÃO PRINCIPAL
+-------------------------------------------------
+
 local mainButton = Instance.new("ImageButton")
 mainButton.Parent = gui
 mainButton.Size = UDim2.new(0,70,0,70)
 mainButton.Position = UDim2.new(0.1,0,0.3,0)
 mainButton.BackgroundTransparency = 1
-mainButton.Image = "rbxassetid://81425888355352"
+mainButton.Image = "rbxassetid://110436801700877"
 
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(1,0)
 corner.Parent = mainButton
+
 -------------------------------------------------
 -- PAINEL PRINCIPAL
+-------------------------------------------------
+
 local mainPanel = Instance.new("ImageLabel")
 mainPanel.Parent = gui
 mainPanel.Size = UDim2.new(0,650,0,420)
 mainPanel.Position = UDim2.new(0.5,-325,0.5,-240)
 mainPanel.BackgroundTransparency = 1
-mainPanel.Image = "rbxassetid://118895110498437"
+mainPanel.Image = "rbxassetid://128640030230058"
 mainPanel.Visible = false
+
+
 criarBotoesJanela(mainPanel, mainPanel, newPanel)
+
+
+local configButton = Instance.new("TextButton")
+configButton.Parent = mainPanel
+configButton.Size = UDim2.new(0,170,0,60)
+configButton.Position = UDim2.new(0.2,-70,1,-210)
+
+configButton.BackgroundTransparency = 1 -- sem fundo
+configButton.Text = " ・discord.gg/Xf2C47BZEk"
+configButton.TextColor3 = Color3.fromRGB(255,255,255)
+configButton.TextScaled = false
+configButton.Font = Enum.Font.GothamBold
+configButton.TextSize = 16
+
+local normalColor = Color3.fromRGB(255,255,255)
+local hoverColor = Color3.fromRGB(0,170,255)
+
+configButton.MouseEnter:Connect(function()
+	configButton.TextColor3 = hoverColor
+end)
+
+configButton.MouseLeave:Connect(function()
+	configButton.TextColor3 = normalColor
+end)
+
 -------------------------------------------------
 -- BOTÃO CONFIG
+-------------------------------------------------
+
 local configButton = Instance.new("ImageButton")
 configButton.Parent = mainPanel
 configButton.Size = UDim2.new(0,170,0,60)
 configButton.Position = UDim2.new(0.2,-20,1,-100)
 configButton.BackgroundTransparency = 1
-local normal = "rbxassetid://117807948007085"
-local hover = "rbxassetid://123670638395761"
+
+local normal = "rbxassetid://119816436247850"
+local hover = "rbxassetid://76239966876533"
+
 configButton.Image = normal
+
 configButton.MouseEnter:Connect(function()
 	configButton.Image = hover
 end)
+
 configButton.MouseLeave:Connect(function()
 	configButton.Image = normal
 end)
-------------------------------------------------
+
+-------------------------------------------------
 -- PAINEL SECUNDÁRIO
+-------------------------------------------------
+
 local newPanel = Instance.new("ImageLabel")
 newPanel.Parent = gui
 newPanel.Size = UDim2.new(0,650,0,420)
 newPanel.Position = UDim2.new(0.5,-325,0.5,-240)
 newPanel.BackgroundTransparency = 1
-newPanel.Image = "rbxassetid://131024619566781"
+newPanel.Image = "rbxassetid://85088129333733"
 newPanel.Visible = false
+
 criarBotoesJanela(newPanel, mainPanel, newPanel)
+
 -------------------------------------------------
 -- SCROLL FRAME
+-------------------------------------------------
+
 local scroll = Instance.new("ScrollingFrame")
 scroll.Parent = newPanel
 scroll.Size = UDim2.new(0,570,0,300)
 scroll.Position = UDim2.new(0.1,-20,0.2,0)
+
 scroll.BackgroundTransparency = 1
 scroll.BorderSizePixel = 0
+
 scroll.CanvasSize = UDim2.new(0,0,0,400)
 scroll.ScrollBarThickness = 6
-tornarMovel(mainPanel)
-tornarMovel(newPanel)
+
+
 -------------------------------------------------
 -- BOTÕES DENTRO DO SCROLL
+-------------------------------------------------
+
+
+--                 BUTTON1
+
 local botao1 = Instance.new("ImageButton")
 botao1.Parent = scroll
 botao1.Size = UDim2.new(0,250,0,50)
 botao1.Position = UDim2.new(0,5,0,0)
 botao1.BackgroundTransparency = 1
 botao1.Image = "rbxassetid://108930673431145"
+
 -- TEXTO
 local texto1 = Instance.new("TextLabel")
 texto1.Parent = botao1
 texto1.Size = UDim2.new(1,-50,1,0)
+
 texto1.Position = UDim2.new(0,20,0,0)
 texto1.BackgroundTransparency = 1
 texto1.Text = "Auto Collect Coin"
@@ -209,6 +255,7 @@ texto1.TextColor3 = Color3.new(1,1,1)
 texto1.TextSize = 22
 texto1.Font = Enum.Font.SourceSansBold
 texto1.TextXAlignment = Enum.TextXAlignment.Left
+
 -- CHECKBOX
 local check1 = Instance.new("TextLabel")
 check1.Parent = botao1
@@ -224,6 +271,7 @@ local ativo1 = false
 botao1.MouseButton1Click:Connect(function()
 
 	ativo1 = not ativo1
+
 	if ativo1 then
 		check1.Text = "▣"
 		check1.TextColor3 = Color3.fromRGB(0, 115, 223)
@@ -231,20 +279,27 @@ botao1.MouseButton1Click:Connect(function()
 		check1.Text = "☐"
 		check1.TextColor3 = Color3.fromRGB(0, 115, 223)
 	end
+
 end)
+
 local player = game.Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
 local hrp = char:WaitForChild("HumanoidRootPart")
+
 -- FUNÇÃO COLETAR
 local function coletar()
+
 	for _,v in pairs(workspace:GetDescendants()) do
 		if v:IsA("BasePart") and v.Name == "Collect" then
+			
 			firetouchinterest(hrp, v, 0)
 			firetouchinterest(hrp, v, 1)
+
 		end
 	end
-
+	
 end
+
 -- LOOP
 task.spawn(function()
 	while task.wait(0.5) do
@@ -257,16 +312,68 @@ task.spawn(function()
 end)
 
 ------------------------------------------------
+
+--                 BUTTON2
+
+local botao2 = Instance.new("ImageButton")
+botao2.Parent = scroll
+botao2.Size = UDim2.new(0,250,0,50)
+botao2.Position = UDim2.new(0,300,0,0)
+botao2.BackgroundTransparency = 1
+botao2.Image = "rbxassetid://108930673431145"
+
+local texto2 = Instance.new("TextLabel")
+texto2.Parent = botao2
+texto2.Size = UDim2.new(1,-60,1,0)
+texto2.Position = UDim2.new(0,20,0,0)
+texto2.BackgroundTransparency = 1
+texto2.Text = "Auto Farm"
+texto2.TextColor3 = Color3.new(1,1,1)
+texto2.TextSize = 22
+texto2.Font = Enum.Font.SourceSansBold
+texto2.TextXAlignment = Enum.TextXAlignment.Left
+
+local check2 = Instance.new("TextLabel")
+check2.Parent = botao2
+check2.Size = UDim2.new(0,40,0,40)
+check2.Position = UDim2.new(1,-55,0.5,-20)
+check2.BackgroundTransparency = 1
+check2.Text = "☐"
+check2.TextScaled = true
+check2.TextColor3 = Color3.fromRGB(0, 115, 223)
+
+local ativo2 = false
+
+botao2.MouseButton1Click:Connect(function()
+
+	ativo2 = not ativo2
+
+	if ativo2 then
+		check2.Text = "▣"
+		check2.TextColor3 = Color3.fromRGB(0, 115, 223)
+	else
+		check2.Text = "☐"
+		check2.TextColor3 = Color3.fromRGB(0, 115, 223)
+	end
+
+end)
+
+------------------------------------------------
+
+--                 BUTTON3
+
 local botao3 = Instance.new("ImageButton")
 botao3.Parent = scroll
 botao3.Size = UDim2.new(0,250,0,50)
 botao3.Position = UDim2.new(0,5,0,70)
 botao3.BackgroundTransparency = 1
 botao3.Image = "rbxassetid://108930673431145"
+
 -- TEXTO
 local texto3 = Instance.new("TextLabel")
 texto3.Parent = botao3
 texto3.Size = UDim2.new(1,-50,1,0)
+
 texto3.Position = UDim2.new(0,20,0,0)
 texto3.BackgroundTransparency = 1
 texto3.Text = "Auto Buy"
@@ -274,6 +381,7 @@ texto3.TextColor3 = Color3.new(1,1,1)
 texto3.TextSize = 22
 texto3.Font = Enum.Font.SourceSansBold
 texto3.TextXAlignment = Enum.TextXAlignment.Left
+
 -- CHECKBOX
 local check3 = Instance.new("TextLabel")
 check3.Parent = botao3
@@ -289,6 +397,7 @@ local ativo3 = false
 botao3.MouseButton1Click:Connect(function()
 
 	ativo3 = not ativo3
+
 	if ativo3 then
 		check3.Text = "▣"
 		check3.TextColor3 = Color3.fromRGB(0, 115, 223)
@@ -296,14 +405,18 @@ botao3.MouseButton1Click:Connect(function()
 		check3.Text = "☐"
 		check3.TextColor3 = Color3.fromRGB(0, 115, 223)
 	end
+
 end)
+
 ------------------------------------------------
+
 local botao6 = Instance.new("ImageButton")
 botao6.Parent = scroll
 botao6.Size = UDim2.new(0,250,0,50)
 botao6.Position = UDim2.new(0,0,0,280)
 botao6.BackgroundTransparency = 1
 botao6.Image = "rbxassetid://108930673431145"
+
 -- TEXTO
 local texto6 = Instance.new("TextLabel")
 texto6.Parent = botao6
@@ -315,6 +428,7 @@ texto6.TextColor3 = Color3.new(1,1,1)
 texto6.TextSize = 22
 texto6.Font = Enum.Font.SourceSansBold
 texto6.TextXAlignment = Enum.TextXAlignment.Left
+
 -- CHECKBOX
 local check6 = Instance.new("TextLabel")
 check6.Parent = botao6
@@ -327,24 +441,32 @@ check6.TextColor3 = Color3.fromRGB(0, 115, 223)
 
 local ativo6 = false
 
+
 botao6.MouseButton1Click:Connect(function()
 
 	ativo6 = not ativo6
+
 	if ativo6 then
 		check6.Text = "▣"
+
 		antiAFKConnection = game.Players.LocalPlayer.Idled:Connect(function()
 			VirtualUser:CaptureController()
 			VirtualUser:ClickButton2(Vector2.new())
 		end)
+
 	else
 		check6.Text = "☐"
 		if antiAFKConnection then
 			antiAFKConnection:Disconnect()
 			antiAFKConnection = nil
 		end
+
 	end
+
 end)
+
 ------------------------------------------------
+
 local botao4 = Instance.new("ImageButton")
 botao4.Parent = scroll
 botao4.Size = UDim2.new(0,250,0,50)
@@ -377,6 +499,7 @@ local ativo4 = false
 botao4.MouseButton1Click:Connect(function()
 
 	ativo4 = not ativo4
+
 	if ativo4 then
 		check4.Text = "▣"
 		check4.TextColor3 = Color3.fromRGB(0, 115, 223)
@@ -384,12 +507,16 @@ botao4.MouseButton1Click:Connect(function()
 		check4.Text = "☐"
 		check4.TextColor3 = Color3.fromRGB(0, 115, 223)
 	end
+
 end)
+
 ------------------------------------------------
+
+
 local botao5 = Instance.new("ImageButton")
 botao5.Parent = scroll
 botao5.Size = UDim2.new(0,250,0,50)
-botao5.Position = UDim2.new(0,300,0,140)
+botao5.Position = UDim2.new(0,300,0,210)
 botao5.BackgroundTransparency = 1
 botao5.Image = "rbxassetid://108930673431145"
 
@@ -416,24 +543,35 @@ check5.TextColor3 = Color3.fromRGB(0, 115, 223)
 local ativo5 = false
 
 botao5.MouseButton1Click:Connect(function()
+
 	ativo5 = not ativo5
+
 	local character = player.Character or player.CharacterAdded:Wait()
 	local humanoid = character:WaitForChild("Humanoid")
+
 	if ativo5 then
 		check5.Text = "▣"
+
 		humanoid.UseJumpPower = true
 		humanoid.JumpPower = 100
+
 	else
 		check5.Text = "☐"
+
 		humanoid.UseJumpPower = true
 		humanoid.JumpPower = 50
+
 	end
+
 end)
+
 ------------------------------------------------
+
+
 local botao5 = Instance.new("ImageButton")
 botao5.Parent = scroll
 botao5.Size = UDim2.new(0,250,0,50)
-botao5.Position = UDim2.new(0,300,0,210)
+botao5.Position = UDim2.new(0,300,0,280)
 botao5.BackgroundTransparency = 1
 botao5.Image = "rbxassetid://108930673431145"
 
@@ -460,67 +598,94 @@ check5.TextColor3 = Color3.fromRGB(0, 115, 223)
 local ativo5 = false
 
 botao5.MouseButton1Click:Connect(function()
+
 	ativo5 = not ativo5
+
 	if ativo5 then
 		check5.Text = "▣"
+
 		-- tirar sombras
 		game.Lighting.GlobalShadows = false
+
 		-- qualidade minima
 		settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+
 		-- remover efeitos
 		for i,v in pairs(game:GetDescendants()) do
+
 			if v:IsA("ParticleEmitter")
 				or v:IsA("Trail")
 				or v:IsA("Smoke")
 				or v:IsA("Fire")
 				or v:IsA("Sparkles") then
+
 				v.Enabled = false
+
 			end
+
 			if v:IsA("Decal") or v:IsA("Texture") then
 				v.Transparency = 1
 			end
+
 		end
+
 	else
 		check5.Text = "☐"
+
 		-- voltar qualidade normal
 		settings().Rendering.QualityLevel = Enum.QualityLevel.Automatic
 		game.Lighting.GlobalShadows = true
+
 	end
+
 end)
+
 ------------------------------------------------
 -- FRAME DO SPEED
+-------------------------------------------------
+
 local speedFrame = Instance.new("Frame")
 speedFrame.Parent = scroll
 speedFrame.Size = UDim2.new(1,-20,0,80)
 speedFrame.BackgroundTransparency = 1
+
 -------------------------------------------------
 -- IMAGEM
+-------------------------------------------------
+
 local speedImage = Instance.new("ImageLabel")
 speedImage.Parent = speedFrame
 speedImage.Size = UDim2.new(0,250,0,50)
 speedImage.Position = UDim2.new(0,0,0,210)
 speedImage.BackgroundTransparency = 1
 speedImage.Image = "rbxassetid://108930673431145"
+
 -------------------------------------------------
 -- TEXTO
+-------------------------------------------------
+
 local speedText = Instance.new("TextLabel")
 speedText.Parent = speedFrame
 speedText.Size = UDim2.new(0,200,0,30)
 speedText.Position = UDim2.new(0,20,0,220)
 speedText.BackgroundTransparency = 1
-speedText.Text = "Walk Speed"
+speedText.Text = "Speed"
 speedText.TextColor3 = Color3.new(1,1,1)
 speedText.TextSize = 20
 speedText.Font = Enum.Font.SourceSansBold
 speedText.TextXAlignment = Enum.TextXAlignment.Left
+
 -------------------------------------------------
 -- BOTÃO DROPDOWN
+-------------------------------------------------
+
 local speedButton = Instance.new("ImageButton")
 speedButton.Parent = speedFrame
 speedButton.Size = UDim2.new(0,90,0,25)
 speedButton.Position = UDim2.new(1,-400,0,220)
 speedButton.Image = "rbxassetid://89730535431644"
 speedButton.BackgroundTransparency = 1
+
 -- TEXTO DO BOTÃO
 local speedButtonText = Instance.new("TextLabel")
 speedButtonText.Parent = speedButton
@@ -530,167 +695,204 @@ speedButtonText.Text = "Normal"
 speedButtonText.TextColor3 = Color3.new(1,1,1)
 speedButtonText.TextSize = 12
 speedButtonText.Font = Enum.Font.SourceSansBold
+
 -------------------------------------------------
 -- MENU
+-------------------------------------------------
+
 local speedMenu = Instance.new("Frame")
 speedMenu.Parent = speedFrame
 speedMenu.Size = UDim2.new(0,150,0,90)
 speedMenu.Position = UDim2.new(1,-340,0,220)
 speedMenu.BackgroundTransparency = 1
 speedMenu.Visible = false
+
 local menuImg = Instance.new("ImageLabel")
 menuImg.Parent = speedMenu
 menuImg.Size = UDim2.new(1,0,1,0)
 menuImg.BackgroundTransparency = 1
 menuImg.Image = "rbxassetid://97706376434954"
+
 local corner = Instance.new("UICorner")
 corner.Parent = menuImg
 corner.CornerRadius = UDim.new(0,5)
+
 -------------------------------------------------
 -- OPÇÕES
+-------------------------------------------------
+
 local options = {
 	"Normal Game",
 	"Fast",
 	"Super Fast"
 }
+
 local player = game.Players.LocalPlayer
 
 for i,v in ipairs(options) do
+
 	local option = Instance.new("TextButton")
 	option.Parent = speedMenu
 	option.Size = UDim2.new(1,0,0,30)
 	option.Position = UDim2.new(0,5,0,(i-1)*30)
 	option.BackgroundTransparency = 1
+
 	option.Text = "   "..v
 	option.TextColor3 = Color3.new(1,1,1)
 	option.TextSize = 12
 	option.TextXAlignment = Enum.TextXAlignment.Left
 
 	option.MouseButton1Click:Connect(function()
+
 		speedButtonText.Text = v
 		speedMenu.Visible = false
+
 		local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+
 		if humanoid then
+
 			if v == "Normal Game" then
 				humanoid.WalkSpeed = 16
+
 			elseif v == "Fast" then
 				humanoid.WalkSpeed = 35
+
 			elseif v == "Super Fast" then
 				humanoid.WalkSpeed = 55
+
 			end
+
 		end
+
 		print("Speed selecionado:", v)
+
 	end)
+
 end
+
 -------------------------------------------------
 -- ABRIR / FECHAR MENU
+-------------------------------------------------
+
 speedButton.MouseButton1Click:Connect(function()
 	speedMenu.Visible = not speedMenu.Visible
 end)
+
+
 -------------------------------------------------
+-- TABELA DE SELECIONADOS
 -------------------------------------------------
--- ITENS SELECIONADOS
 
 local selecionados = {}
 
 -------------------------------------------------
--- BOTÃO AUTO BUY
+-- FRAME DO ESP
+-------------------------------------------------
 
-local botao2 = Instance.new("ImageButton")
-botao2.Parent = scroll
-botao2.Size = UDim2.new(0,250,0,50)
-botao2.Position = UDim2.new(0,300,0,0)
-botao2.BackgroundTransparency = 1
-botao2.Image = "rbxassetid://108930673431145"
-
-local texto2 = Instance.new("TextLabel")
-texto2.Parent = botao2
-texto2.Size = UDim2.new(1,-60,1,0)
-texto2.Position = UDim2.new(0,20,0,0)
-texto2.BackgroundTransparency = 1
-texto2.Text = "Auto Buy ingredients"
-texto2.TextColor3 = Color3.new(1,1,1)
-texto2.TextSize = 19
-texto2.Font = Enum.Font.SourceSansBold
-texto2.TextXAlignment = Enum.TextXAlignment.Left
+local espFrame = Instance.new("Frame")
+espFrame.Parent = scroll
+espFrame.Size = UDim2.new(1,-20,0,80)
+espFrame.BackgroundTransparency = 1
 
 -------------------------------------------------
--- BOTÃO SELECT
-local dropdownButton2 = Instance.new("ImageButton")
-dropdownButton2.Parent = botao2
-dropdownButton2.Size = UDim2.new(0,70,0,25)
-dropdownButton2.Position = UDim2.new(1,-80,0.5,-12)
-dropdownButton2.Image = "rbxassetid://89730535431644"
-dropdownButton2.BackgroundTransparency = 1
+-- IMAGEM
+-------------------------------------------------
 
+local espImage = Instance.new("ImageLabel")
+espImage.Parent = espFrame
+espImage.Size = UDim2.new(0,250,0,50)
+espImage.Position = UDim2.new(0,300,0,140)
+espImage.BackgroundTransparency = 1
+espImage.Image = "rbxassetid://108930673431145"
+
+-------------------------------------------------
+-- TEXTO
+-------------------------------------------------
+
+local espText = Instance.new("TextLabel")
+espText.Parent = espFrame
+espText.Size = UDim2.new(0,200,0,30)
+espText.Position = UDim2.new(0,320,0,150)
+espText.BackgroundTransparency = 1
+espText.Text = "ESP Type"
+espText.TextColor3 = Color3.new(1,1,1)
+espText.TextSize = 20
+espText.Font = Enum.Font.SourceSansBold
+espText.TextXAlignment = Enum.TextXAlignment.Left
+
+-------------------------------------------------
+-- BOTÃO DROPDOWN
+-------------------------------------------------
+
+local dropdownButton = Instance.new("ImageButton")
+dropdownButton.Parent = espFrame
+dropdownButton.Size = UDim2.new(0,90,0,25)
+dropdownButton.Position = UDim2.new(1,-100,0,150)
+dropdownButton.Image = "rbxassetid://89730535431644"
+dropdownButton.BackgroundTransparency = 1
 
 -- TEXTO DO BOTÃO
-local selectButton = Instance.new("TextButton")
-selectButton.Parent = dropdownButton2
-selectButton.Size = UDim2.new(1,0,1,0)
-selectButton.Position = UDim2.new(0,0,0,0)
-selectButton.BackgroundTransparency = 1
-selectButton.Text = "Select"
-selectButton.TextColor3 = Color3.new(1,1,1)
-selectButton.TextSize = 12
-selectButton.Font = Enum.Font.SourceSansBold
+local dropdownText = Instance.new("TextLabel")
+dropdownText.Parent = dropdownButton
+dropdownText.Size = UDim2.new(1,0,1,0)
+dropdownText.BackgroundTransparency = 1
+dropdownText.Text = "Select"
+dropdownText.TextColor3 = Color3.new(1,1,1)
+dropdownText.TextSize = 12
+dropdownText.Font = Enum.Font.SourceSansBold
 
 -------------------------------------------------
 -- MENU
-
-local dropdownMenu2 = Instance.new("Frame")
-dropdownMenu2.Parent = botao2
-dropdownMenu2.Size = UDim2.new(0,150,0,210)
-dropdownMenu2.Position = UDim2.new(1,-160,1,5)
-dropdownMenu2.BackgroundTransparency = 1
-dropdownMenu2.Visible = false
-
 -------------------------------------------------
+
+local dropdownMenu = Instance.new("Frame")
+dropdownMenu.Parent = espFrame
+dropdownMenu.Size = UDim2.new(0,150,0,90)
+dropdownMenu.Position = UDim2.new(1,-220,0,150)
+dropdownMenu.BackgroundTransparency = 1
+dropdownMenu.Visible = false
+
 -- IMAGEM FUNDO
+local menuImg = Instance.new("ImageLabel")
+menuImg.Parent = dropdownMenu
+menuImg.Size = UDim2.new(1,0,1,0)
+menuImg.Position = UDim2.new(0,0,0,0)
+menuImg.BackgroundTransparency = 1
+menuImg.Image = "rbxassetid://97706376434954"
 
-local menuImg2 = Instance.new("ImageLabel")
-menuImg2.Parent = dropdownMenu2
-menuImg2.Size = UDim2.new(1,0,1,0)
-menuImg2.Position = UDim2.new(0,0,0,0)
-menuImg2.BackgroundTransparency = 1
-menuImg2.Image = "rbxassetid://97706376434954"
-
--------------------------------------------------
--- ABRIR MENU
-
-selectButton.MouseButton1Click:Connect(function()
-	dropdownMenu2.Visible = not dropdownMenu2.Visible
-end)
+-- BORDAS
+local corner2 = Instance.new("UICorner")
+corner2.Parent = menuImg
+corner2.CornerRadius = UDim.new(0,5)
 
 -------------------------------------------------
 -- OPÇÕES
+-------------------------------------------------
 
 local options = {
-	"Ice Emblem",
-	"Victrola",
-	"Star",
-	"Flower",
-	"Phone",
-	"Taco",
-	"Lighter"
+	"Players",
+	"Brainrot",
+	"Lucky Block"
 }
 
 for i,v in ipairs(options) do
 
 	local option = Instance.new("TextButton")
-	option.Parent = dropdownMenu2
+	option.Parent = dropdownMenu
 	option.Size = UDim2.new(1,0,0,30)
-	option.Position = UDim2.new(0,0,0,(i-1)*30)
+	option.Position = UDim2.new(0,5,0,(i-1)*30)
 	option.BackgroundTransparency = 1
+
 	option.Text = "   "..v.."  ☐"
 	option.TextColor3 = Color3.new(1,1,1)
-	option.TextSize = 14
-	option.Font = Enum.Font.SourceSansBold
+	option.TextSize = 12
 	option.TextXAlignment = Enum.TextXAlignment.Left
+
+	local ativo = false
 
 	option.MouseButton1Click:Connect(function()
 
-		local ativo = not selecionados[v]
+		ativo = not ativo
 
 		if ativo then
 			option.Text = "   "..v.."  ▣"
@@ -700,31 +902,112 @@ for i,v in ipairs(options) do
 			selecionados[v] = nil
 		end
 
+		local count = 0
+		for _ in pairs(selecionados) do
+			count += 1
+		end
+
+		if count == 0 then
+			dropdownText.Text = "Select"
+		else
+			dropdownText.Text = count.." Selected"
+		end
+
+		if selecionados["Players"] then
+			ESPPlayers()
+		end
+
+		if selecionados["Brainrot"] then
+			ESPBrainrot()
+		end
+
+		if selecionados["Lucky Block"] then
+			ESPLucky()
+		end
+
+	end)
+
+end
+
+local player = game.Players.LocalPlayer
+
+local function distancia(obj)
+	if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
+		return 0
+	end
+
+	local root = player.Character.HumanoidRootPart
+
+	if obj:IsA("BasePart") then
+		return math.floor((root.Position - obj.Position).Magnitude)
+	elseif obj:IsA("Model") and obj:FindFirstChild("HumanoidRootPart") then
+		return math.floor((root.Position - obj.HumanoidRootPart.Position).Magnitude)
+	end
+
+	return 0
+end
+
+-------------------------------------------------
+-- FUNÇÃO ESP
+-------------------------------------------------
+
+local function criarESP(obj, texto, cor)
+
+	if not obj then return end
+	if obj:FindFirstChild("ESPLabel") then return end
+
+	local billboard = Instance.new("BillboardGui")
+	billboard.Name = "ESPLabel"
+	billboard.Parent = obj
+	billboard.Size = UDim2.new(0,140,0,40)
+	billboard.StudsOffset = Vector3.new(0,3,0)
+	billboard.AlwaysOnTop = true
+
+	local label = Instance.new("TextLabel")
+	label.Parent = billboard
+	label.Size = UDim2.new(1,0,1,0)
+	label.BackgroundTransparency = 1
+	label.Text = texto
+	label.TextColor3 = cor
+	label.TextStrokeTransparency = 0
+	label.TextScaled = true
+
+	local highlight = Instance.new("Highlight")
+	highlight.Parent = obj
+	highlight.FillTransparency = 1
+	highlight.OutlineColor = cor
+	highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+
+	-- ATUALIZA DISTÂNCIA
+	task.spawn(function()
+		while billboard.Parent do
+			task.wait(0.5)
+			local dist = distancia(obj)
+			label.Text = texto.." ["..dist.."m]"
+		end
 	end)
 
 end
 
 -------------------------------------------------
--- AUTO BUY
+-- ESP PLAYERS
+-------------------------------------------------
 
-task.spawn(function()
+function ESPPlayers()
 
-	while true do
-		task.wait(0.5)
+	while selecionados["Players"] do
 
-		for item,_ in pairs(selecionados) do
+		for _,p in pairs(game.Players:GetPlayers()) do
 
-			for _,v in pairs(workspace:GetDescendants()) do
+			if p ~= player then
 
-				if v:IsA("ProximityPrompt") then
+				if p.Character and p.Character:FindFirstChild("Head") then
 
-					local text = v.ObjectText or v.Parent.Name
-
-					if string.find(string.lower(text), string.lower(item)) then
-						pcall(function()
-							fireproximityprompt(v)
-						end)
-					end
+					criarESP(
+						p.Character.Head,
+						p.Name,
+						Color3.fromRGB(255,255,0)
+					)
 
 				end
 
@@ -732,23 +1015,98 @@ task.spawn(function()
 
 		end
 
+		task.wait(1)
 	end
 
+end
+
+-------------------------------------------------
+-- ESP BRAINROT
+-------------------------------------------------
+
+function ESPBrainrot()
+
+	while selecionados["Brainrot"] do
+
+		if workspace:FindFirstChild("Brainrots") then
+
+			for _,v in pairs(workspace.Brainrots:GetChildren()) do
+
+				local raridade = "?"
+
+				if v:FindFirstChild("BrainrotRarity") then
+					raridade = v.BrainrotRarity.Value
+				end
+
+				criarESP(
+					v,
+					v.Name.." ["..raridade.."]",
+					Color3.fromRGB(255,0,255)
+				)
+
+			end
+
+		end
+
+		task.wait(1)
+	end
+
+end
+
+-------------------------------------------------
+-- ESP LUCKY BLOCK
+-------------------------------------------------
+
+function ESPLucky()
+
+	while selecionados["Lucky Block"] do
+
+		for _,v in pairs(workspace:GetDescendants()) do
+
+			if v.Name == "LuckyBlock" then
+
+				criarESP(
+					v,
+					"Lucky Block",
+					Color3.fromRGB(0,255,0)
+				)
+
+			end
+
+		end
+
+		task.wait(2)
+	end
+
+end
+-------------------------------------------------
+-- ABRIR / FECHAR MENU
+-------------------------------------------------
+dropdownButton.MouseButton1Click:Connect(function()
+	dropdownMenu.Visible = not dropdownMenu.Visible
 end)
 -------------------------------------------------
 -- FRAME DO BRAINROT
+-------------------------------------------------
 local brainrotFrame = Instance.new("Frame")
 brainrotFrame.Parent = scroll
 brainrotFrame.Size = UDim2.new(1,-20,0,80)
 brainrotFrame.BackgroundTransparency = 1
+-------------------------------------------------
 -- IMAGEM
+-------------------------------------------------
+
 local brainrotImage = Instance.new("ImageLabel")
 brainrotImage.Parent = brainrotFrame
 brainrotImage.Size = UDim2.new(0,250,0,50)
 brainrotImage.Position = UDim2.new(0,5,0,140)
 brainrotImage.BackgroundTransparency = 1
 brainrotImage.Image = "rbxassetid://108930673431145"
+
+-------------------------------------------------
 -- TEXTO
+-------------------------------------------------
+
 local brainrotText = Instance.new("TextLabel")
 brainrotText.Parent = brainrotFrame
 brainrotText.Size = UDim2.new(0,200,0,30)
@@ -759,13 +1117,18 @@ brainrotText.TextColor3 = Color3.new(1,1,1)
 brainrotText.TextSize = 20
 brainrotText.Font = Enum.Font.SourceSansBold
 brainrotText.TextXAlignment = Enum.TextXAlignment.Left
+
+-------------------------------------------------
 -- BOTÃO DROPDOWN
+-------------------------------------------------
+
 local dropdownButton = Instance.new("ImageButton")
 dropdownButton.Parent = brainrotFrame
 dropdownButton.Size = UDim2.new(0,90,0,25)
 dropdownButton.Position = UDim2.new(1,-400,0,150)
 dropdownButton.Image = "rbxassetid://89730535431644"
 dropdownButton.BackgroundTransparency = 1
+
 -- TEXTO DO BOTÃO
 local dropdownText = Instance.new("TextLabel")
 dropdownText.Parent = dropdownButton
@@ -775,13 +1138,18 @@ dropdownText.Text = "Select"
 dropdownText.TextColor3 = Color3.new(1,1,1)
 dropdownText.TextSize = 12
 dropdownText.Font = Enum.Font.SourceSansBold
+
+-------------------------------------------------
 -- MENU
+-------------------------------------------------
+
 local dropdownMenu = Instance.new("Frame")
 dropdownMenu.Parent = brainrotFrame
 dropdownMenu.Size = UDim2.new(0,150,0,240)
 dropdownMenu.Position = UDim2.new(1,-330,0,45)
 dropdownMenu.BackgroundTransparency = 1
 dropdownMenu.Visible = false
+
 -- IMAGEM FUNDO
 local menuImg = Instance.new("ImageLabel")
 menuImg.Parent = dropdownMenu
@@ -789,11 +1157,16 @@ menuImg.Size = UDim2.new(1,0,1,0)
 menuImg.Position = UDim2.new(0,0,0,0)
 menuImg.BackgroundTransparency = 1
 menuImg.Image = "rbxassetid://97706376434954"
+
 -- BORDAS
 local corner2 = Instance.new("UICorner")
 corner2.Parent = menuImg
 corner2.CornerRadius = UDim.new(0,5)
+
+-------------------------------------------------
 -- OPÇÕES
+-------------------------------------------------
+
 local options = {
 	"Common",
 	"Uncommon",
@@ -804,20 +1177,26 @@ local options = {
 	"Secret",
 	"Stellar"
 }
+
 for i,v in ipairs(options) do
+
 	local option = Instance.new("TextButton")
 	option.Parent = dropdownMenu
 	option.Size = UDim2.new(1,0,0,30)
 	option.Position = UDim2.new(0,5,0,(i-1)*30)
 	option.BackgroundTransparency = 1
+	
 	option.Text = "   "..v.."  ☐"
 	option.TextColor3 = Color3.new(1,1,1)
 	option.TextSize = 12
 	option.TextXAlignment = Enum.TextXAlignment.Left
 
 	local ativo = false
+
 	option.MouseButton1Click:Connect(function()
+
 		ativo = not ativo
+
 		if ativo then
 			option.Text = "   "..v.."  ▣"
 			selecionados[v] = true
@@ -825,75 +1204,107 @@ for i,v in ipairs(options) do
 			option.Text = "   "..v.."  ☐"
 			selecionados[v] = nil
 		end
+		
 		-- Atualizar texto do botão
 		local count = 0
 		for _ in pairs(selecionados) do
 			count += 1
 		end
+
 		if count == 0 then
 			dropdownText.Text = "Select"
 		else
 			dropdownText.Text = count.." Selected"
 		end
+
 		print("Selecionados:")
 		for k in pairs(selecionados) do
 			print(k)
 		end
+
 	end)
+
 end
+
 -------------------------------------------------
 -- ABRIR / FECHAR MENU
+-------------------------------------------------
 dropdownButton.MouseButton1Click:Connect(function()
 	dropdownMenu.Visible = not dropdownMenu.Visible
 end)
 -------------------------------------------------
 -- ABRIR CONFIG
+-------------------------------------------------
+
 configButton.MouseButton1Click:Connect(function()
 
 	mainPanel.Visible = false
 	newPanel.Visible = true
 
 end)
+
 -------------------------------------------------
 -- BOTÃO PRINCIPAL
+-------------------------------------------------
+
 mainButton.MouseButton1Click:Connect(function()
 
 	if mainPanel.Visible or newPanel.Visible then
+
 		mainPanel.Visible = false
 		newPanel.Visible = false
+
 	else
+
 		-- sempre volta para painel principal
 		mainPanel.Visible = true
 		newPanel.Visible = false
+
 	end
+
 end)
+
 -------------------------------------------------
 -- DRAG BOTÃO PRINCIPAL
+-------------------------------------------------
+
 local dragging = false
 local dragStart
 local startPos
 
 mainButton.InputBegan:Connect(function(input)
+
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+
 		dragging = true
 		dragStart = input.Position
 		startPos = mainButton.Position
+
 		input.Changed:Connect(function()
+
 			if input.UserInputState == Enum.UserInputState.End then
 				dragging = false
 			end
+
 		end)
+
 	end
+
 end)
 
 UIS.InputChanged:Connect(function(input)
+
 	if dragging then
+
 		local delta = input.Position - dragStart
+
 		mainButton.Position = UDim2.new(
 			startPos.X.Scale,
 			startPos.X.Offset + delta.X,
 			startPos.Y.Scale,
 			startPos.Y.Offset + delta.Y
 		)
+
 	end
+
 end)
