@@ -128,7 +128,7 @@ end
 
 local mainButton = Instance.new("ImageButton")
 mainButton.Parent = gui
-mainButton.Size = UDim2.new(0,70,0,70)
+mainButton.Size = UDim2.new(0,60,0,60)
 mainButton.Position = UDim2.new(0.1,0,0.3,0)
 mainButton.BackgroundTransparency = 1
 mainButton.Image = "rbxassetid://110436801700877"
@@ -153,7 +153,7 @@ mainPanel.Visible = false
 criarBotoesJanela(mainPanel, mainPanel, newPanel)
 
 
-local configButton = Instance.new("TextButton")
+local configButton = Instance.new("TextLabel")
 configButton.Parent = mainPanel
 configButton.Size = UDim2.new(0,170,0,60)
 configButton.Position = UDim2.new(0.2,-70,1,-210)
@@ -163,18 +163,9 @@ configButton.Text = " ・discord.gg/Xf2C47BZEk"
 configButton.TextColor3 = Color3.fromRGB(255,255,255)
 configButton.TextScaled = false
 configButton.Font = Enum.Font.GothamBold
+configButton.TextColor3 = Color3.new(1,1,1)
 configButton.TextSize = 16
 
-local normalColor = Color3.fromRGB(255,255,255)
-local hoverColor = Color3.fromRGB(0,170,255)
-
-configButton.MouseEnter:Connect(function()
-	configButton.TextColor3 = hoverColor
-end)
-
-configButton.MouseLeave:Connect(function()
-	configButton.TextColor3 = normalColor
-end)
 
 -------------------------------------------------
 -- BOTÃO CONFIG
