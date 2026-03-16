@@ -173,12 +173,12 @@ configButton.TextSize = 16
 
 local configButton = Instance.new("ImageButton")
 configButton.Parent = mainPanel
-configButton.Size = UDim2.new(0,170,0,60)
+configButton.Size = UDim2.new(0,170,0,65)
 configButton.Position = UDim2.new(0.2,-20,1,-100)
 configButton.BackgroundTransparency = 1
 
-local normal = "rbxassetid://119816436247850"
-local hover = "rbxassetid://76239966876533"
+local normal = "rbxassetid://117807948007085"
+local hover = "rbxassetid://123670638395761"
 
 configButton.Image = normal
 
@@ -407,67 +407,12 @@ botao6.MouseButton1Click:Connect(function()
 
 end)
 
-------------------------------------------------
--- PLAYER
-local player = game.Players.LocalPlayer
-local char = player.Character or player.CharacterAdded:Wait()
-local hrp = char:WaitForChild("HumanoidRootPart")
-
---------------------------------------------------
--- COLETAR COINS
---------------------------------------------------
-
-local function coletar()
-
-	for _,v in pairs(workspace:GetDescendants()) do
-		if v:IsA("BasePart") and v.Name == "Collect" then
-			firetouchinterest(hrp, v, 0)
-			firetouchinterest(hrp, v, 1)
-		end
-	end
-
-end
-
---------------------------------------------------
--- PEGAR BRAINROT
---------------------------------------------------
-
-local function comprarBrainrot()
-
-	local brainrots = player.PlayerGui:FindFirstChild("Brainrots", true)
-
-	if brainrots then
-		for _,v in pairs(brainrots:GetDescendants()) do
-			if v:IsA("TextButton") or v:IsA("ImageButton") then
-
-				pcall(function()
-					v:Activate()
-				end)
-
-			end
-		end
-	end
-
-end
-
---------------------------------------------------
--- REBIRTH
---------------------------------------------------
-
-local function rebirth()
-
-	local rebirthRemote = game:GetService("ReplicatedStorage"):FindFirstChild("Rebirth")
-
-	if rebirthRemote then
-		rebirthRemote:FireServer()
-	end
-
-end
 
 --------------------------------------------------
 -- BOTÃO AUTO REBIRTH
 --------------------------------------------------
 
+```lua
 local botao4 = Instance.new("ImageButton")
 botao4.Parent = scroll
 botao4.Size = UDim2.new(0,250,0,50)
@@ -500,6 +445,7 @@ check4.TextColor3 = Color3.fromRGB(0,115,223)
 --------------------------------------------------
 
 local ativo4 = false
+local player = game.Players.LocalPlayer
 
 botao4.MouseButton1Click:Connect(function()
 
@@ -513,21 +459,64 @@ botao4.MouseButton1Click:Connect(function()
 
 end)
 
---------------------------------------------------
--- LOOP AUTO FARM + REBIRTH
---------------------------------------------------
-
 task.spawn(function()
 
-	while task.wait(1) do
+	while task.wait(2) do
 
 		if ativo4 then
 
+			local char = player.Character
+			if not char then continue end
+
+			local hrp = char:FindFirstChild("HumanoidRootPart")
+			if not hrp then continue end
+
+			local rebirthUI = player.PlayerGui:FindFirstChild("Rebirth")
+			if not rebirthUI then continue end
+
+			local brainrots = rebirthUI:FindFirstChild("Brainrots")
+			if not brainrots then continue end
+
+			-- pegar brainrot necessário
+			for _,ui in pairs(brainrots:GetDescendants()) do
+
+				if ui:IsA("TextLabel") and ui.Text ~= "" then
+
+					local needed = ui.Text
+
+					for _,model in pairs(workspace:GetDescendants()) do
+
+						if model:IsA("Model") then
+
+							local objText = model:FindFirstChild("ObjectText",true)
+
+							if objText and objText:IsA("TextLabel") then
+
+								if string.find(objText.Text,needed) then
+
+									hrp.CFrame = model:GetPivot() + Vector3.new(0,3,0)
+									task.wait(1)
+
+								end
+
+							end
+
+						end
+
+					end
+
+				end
+
+			end
+
+			-- tentar rebirth
 			pcall(function()
 
-				coletar()
-				comprarBrainrot()
-				rebirth()
+				for _,v in pairs(game:GetDescendants()) do
+					if v:IsA("RemoteEvent") and string.find(v.Name:lower(),"rebirth") then
+						v:FireServer()
+					end
+				end
 
 			end)
 
@@ -536,6 +525,8 @@ task.spawn(function()
 	end
 
 end)
+```
+
 ------------------------------------------------
 
 
