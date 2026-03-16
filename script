@@ -439,9 +439,6 @@ check4.Text = "☐"
 check4.TextScaled = true
 check4.TextColor3 = Color3.fromRGB(0,115,223)
 
---------------------------------------------------
--- SISTEMA
---------------------------------------------------
 
 local ativo4 = false
 local player = game.Players.LocalPlayer
@@ -460,44 +457,75 @@ end)
 
 task.spawn(function()
 
-	while task.wait(2) do
+	while task.wait(1) do
 
-		if ativo4 then
+		if not ativo4 then continue end
 
-			local char = player.Character
-			if not char then continue end
+		local char = player.Character
+		if not char then continue end
 
-			local hrp = char:FindFirstChild("HumanoidRootPart")
-			if not hrp then continue end
+		local hrp = char:FindFirstChild("HumanoidRootPart")
+		if not hrp then continue end
 
-			local rebirthUI = player.PlayerGui:FindFirstChild("Rebirth")
-			if not rebirthUI then continue end
+		local rebirthUI = player.PlayerGui:FindFirstChild("Rebirth")
+		if not rebirthUI then continue end
 
-			local brainrots = rebirthUI:FindFirstChild("Brainrots")
-			if not brainrots then continue end
+		local brainrots = rebirthUI:FindFirstChild("Brainrots")
+		if not brainrots then continue end
 
-			-- pegar brainrot necessário
-			for _,ui in pairs(brainrots:GetDescendants()) do
 
-				if ui:IsA("TextLabel") and ui.Text ~= "" then
+		--------------------------------------------------
+		-- PEGAR NOME DO BRAINROT NECESSÁRIO
+		--------------------------------------------------
 
-					local needed = ui.Text
+		local neededName = nil
 
-					for _,model in pairs(workspace:GetDescendants()) do
+		for _,ui in pairs(brainrots:GetDescendants()) do
+			if ui:IsA("TextLabel") then
+				if ui.Text ~= "" then
+					neededName = ui.Text
+					break
+				end
+			end
+		end
 
-						if model:IsA("Model") then
+		if not neededName then continue end
 
-							local objText = model:FindFirstChild("ObjectText",true)
 
-							if objText and objText:IsA("TextLabel") then
+		--------------------------------------------------
+		-- PROCURAR BRAINROT NO MAPA
+		--------------------------------------------------
 
-								if string.find(objText.Text,needed) then
+		for _,model in pairs(workspace:GetDescendants()) do
 
-									hrp.CFrame = model:GetPivot() + Vector3.new(0,3,0)
-									task.wait(1)
+			if model:IsA("Model") then
 
-								end
+				local objText = model:FindFirstChild("ObjectText",true)
 
+				if objText and objText:IsA("TextLabel") then
+
+					local mapName = string.lower(objText.Text)
+					local need = string.lower(neededName)
+
+					if string.find(mapName, need) then
+
+						--------------------------------------------------
+						-- TELEPORTAR
+						--------------------------------------------------
+
+						local pivot = model:GetPivot()
+						hrp.CFrame = pivot + Vector3.new(0,3,0)
+
+						task.wait(0.8)
+
+						--------------------------------------------------
+						-- COMPRAR AUTOMATICAMENTE
+						--------------------------------------------------
+
+						for _,prompt in pairs(model:GetDescendants()) do
+
+							if prompt:IsA("ProximityPrompt") then
+								fireproximityprompt(prompt)
 							end
 
 						end
@@ -508,18 +536,22 @@ task.spawn(function()
 
 			end
 
-			-- tentar rebirth
-			pcall(function()
-
-				for _,v in pairs(game:GetDescendants()) do
-					if v:IsA("RemoteEvent") and string.find(v.Name:lower(),"rebirth") then
-						v:FireServer()
-					end
-				end
-
-			end)
-
 		end
+
+
+		--------------------------------------------------
+		-- TENTAR REBIRTH
+		--------------------------------------------------
+
+		pcall(function()
+
+			for _,v in pairs(game:GetDescendants()) do
+				if v:IsA("RemoteEvent") and string.find(v.Name:lower(),"rebirth") then
+					v:FireServer()
+				end
+			end
+
+		end)
 
 	end
 
