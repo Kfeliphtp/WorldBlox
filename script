@@ -150,7 +150,7 @@ mainPanel.Image = "rbxassetid://128640030230058"
 mainPanel.Visible = false
 
 
-criarBotoesJanela(mainPanel, mainPanel, newPanel)
+criarBotoesJanela(mainPanel, newPanel)
 
 
 local configButton = Instance.new("TextLabel")
@@ -202,7 +202,7 @@ newPanel.BackgroundTransparency = 1
 newPanel.Image = "rbxassetid://85088129333733"
 newPanel.Visible = false
 
-criarBotoesJanela(newPanel, mainPanel, newPanel)
+criarBotoesJanela(newPanel, mainPanel)
 
 -------------------------------------------------
 -- SCROLL FRAME
@@ -524,7 +524,6 @@ task.spawn(function()
 	end
 
 end)
-```
 
 ------------------------------------------------
 
